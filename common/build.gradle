@@ -1,0 +1,26 @@
+archivesBaseName = 'web-common'
+sourceSets {
+    def dsl = create('dsl')
+    extension {
+        groovy {
+            compileClasspath += dsl.output
+        }
+    }
+}
+configurations {
+    implementation.extendsFrom(groovyDeps)
+    extensionImplementation.extendsFrom(implementation)
+    dslImplementation.extendsFrom(implementation)
+}
+dependencies {
+    implementation libs.javalin
+
+    api sourceSets.dsl.output
+    api sourceSets.extension.output
+}
+
+jar {
+    from sourceSets.dsl.output
+    from sourceSets.extension.output
+    classifier 'common'
+}

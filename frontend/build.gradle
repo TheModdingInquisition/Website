@@ -1,0 +1,12 @@
+configurations {
+    implementation.extendsFrom(groovyDeps)
+}
+
+archivesBaseName = 'web-frontend'
+
+dependencies {
+    implementation project(':common')
+    implementation libs.gson
+    implementation libs.javalin
+    implementation libs.logback
+}

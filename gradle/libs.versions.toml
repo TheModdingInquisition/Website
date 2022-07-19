@@ -1,0 +1,13 @@
+[plugins]
+licenser = { id = "org.cadixdev.licenser", version = "0.6.1" }
+
+[versions]
+javalin = "4.6.4"
+groovy = "4.0.3"
+gson = "2.9.0"
+logback = "1.2.11"
+
+[libraries]
+javalin = { module = "io.javalin:javalin", version.ref = "javalin" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }

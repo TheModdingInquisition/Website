@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'groovy'
+    alias(libs.plugins.licenser)
+}
+
+group = 'org.moddinginquisition.web'
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'java-library'
+    apply plugin: 'org.cadixdev.licenser'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+
+    configurations {
+        groovyDeps
+    }
+    dependencies {
+        groovyDeps('org.apache.groovy:groovy-all:4.0.3') {
+            exclude module: 'groovy-cli-picocli'
+            exclude module: 'groovy-groovysh'
+        }
+        groovyDeps('org.apache.groovy:groovy-contracts:4.0.3')
+    }
+
+    license {
+        header = rootProject.file('LICENSE')
+    }
+
+    tasks.withType(GroovyCompile) { groovyOptions.optimizationOptions?.put("indy", true) }
+    sourceCompatibility = JavaVersion.VERSION_17
+
+    updateLicenses {
+        group = 'licensing'
+    }
+}
