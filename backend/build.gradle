@@ -5,8 +5,15 @@ configurations {
 archivesBaseName = 'web-backend'
 
 dependencies {
-    implementation project(':common')
     implementation libs.gson
     implementation libs.javalin
     implementation libs.logback
+}
+
+final myProj = project
+project(':common').afterEvaluate {
+    myProj.dependencies {
+        implementation project(':common').sourceSets.dsl.output
+        implementation project(':common').sourceSets.extension.output
+    }
 }

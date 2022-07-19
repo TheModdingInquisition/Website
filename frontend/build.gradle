@@ -5,8 +5,25 @@ configurations {
 archivesBaseName = 'web-frontend'
 
 dependencies {
-    implementation project(':common')
     implementation libs.gson
     implementation libs.javalin
     implementation libs.logback
+
+    implementation libs.vue
+}
+
+processResources {
+    from(rootProject.file('favicon.png')) {
+        into 'public'
+    }
+}
+
+Runnable configuration = () -> {
+    dependencies {
+        implementation project(':common').sourceSets.dsl.output
+        implementation project(':common').sourceSets.extension.output
+    }
+}
+afterEvaluate {
+    configuration.run()
 }

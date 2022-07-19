@@ -1,11 +1,7 @@
 archivesBaseName = 'web-common'
 sourceSets {
-    def dsl = create('dsl')
-    extension {
-        groovy {
-            compileClasspath += dsl.output
-        }
-    }
+    dsl {}
+    extension {}
 }
 configurations {
     implementation.extendsFrom(groovyDeps)
@@ -15,8 +11,10 @@ configurations {
 dependencies {
     implementation libs.javalin
 
-    api sourceSets.dsl.output
-    api sourceSets.extension.output
+    extensionCompileOnly sourceSets.dsl.output
+
+//    api sourceSets.dsl.output
+//    api sourceSets.extension.output
 }
 
 jar {

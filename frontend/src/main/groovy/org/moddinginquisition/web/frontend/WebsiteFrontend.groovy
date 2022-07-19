@@ -27,6 +27,9 @@ package org.moddinginquisition.web.frontend
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.javalin.Javalin
+import io.javalin.http.staticfiles.Location
+import io.javalin.plugin.rendering.vue.JavalinVue
+import io.javalin.plugin.rendering.vue.VueComponent
 
 import java.nio.file.Path
 
@@ -35,11 +38,22 @@ import java.nio.file.Path
 class WebsiteFrontend {
 
     static void main(String[] args) throws Exception {
-        final conf = Configuration.read(Path.of('config.json'))
-        final app = Javalin.create().start(conf.port)
-        app.get('/') {
-            result('no')
+        JavalinVue.rootDirectory {
+            it.classpathPath('/vue', WebsiteFrontend)
         }
+
+        final conf = Configuration.read(Path.of('config.json'))
+        final app = Javalin.create() {
+            it.enableWebjars()
+            it.addStaticFiles('/public', Location.CLASSPATH)
+        }.start(conf.port)
+        app.get('/', vue('index'))
+
+        app.error(404, 'html', vue('not-found'))
+    }
+
+    static VueComponent vue(String name) {
+        new VueComponent(name)
     }
 
 }
