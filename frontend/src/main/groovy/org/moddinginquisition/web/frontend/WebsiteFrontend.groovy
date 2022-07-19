@@ -48,8 +48,20 @@ class WebsiteFrontend {
             it.addStaticFiles('/public', Location.CLASSPATH)
         }.start(conf.port)
         app.get('/', vue('index'))
+        app.get('/members', vue('members'))
 
         app.error(404, 'html', vue('not-found'))
+
+        final clientApiEndpoint = '/client_api/'
+        app.get("$clientApiEndpoint/get_org_members") {
+            try {
+                final is = URI.create("https://api.github.com/orgs/${conf.organization}/members?page=1&per_page=100").toURL().newInputStream()
+                result(is)
+            } catch (IOException e) {
+                result("{'err': 'Unable to load org members!'}")
+                log.error('Unable to load requested org members!', e)
+            }
+        }
     }
 
     static VueComponent vue(String name) {

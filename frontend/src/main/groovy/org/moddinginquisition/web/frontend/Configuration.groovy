@@ -44,6 +44,7 @@ class Configuration {
         .create()
 
     int port = 8080
+    String organization = 'TheModdingInquisition'
 
     static Configuration read(Path path) throws IOException {
         if (Files.notExists path) {

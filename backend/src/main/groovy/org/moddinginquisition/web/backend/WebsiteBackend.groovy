@@ -38,7 +38,7 @@ class WebsiteBackend {
         final conf = Configuration.read(Path.of('config.json'))
         final app = Javalin.create().start(conf.port)
         app.get('/') {
-            result('no')
+            result('WIP')
         }
     }
 
