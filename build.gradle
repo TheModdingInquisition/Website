@@ -31,7 +31,12 @@ allprojects {
         header = rootProject.file('LICENSE')
     }
 
-    tasks.withType(GroovyCompile) { groovyOptions.optimizationOptions?.put("indy", true) }
+    tasks.withType(GroovyCompile) {
+        groovyOptions.optimizationOptions?.put("indy", true)
+        configure(groovyOptions) {
+            configurationScript = rootProject.file('groovy-compiler.groovy')
+        }
+    }
     sourceCompatibility = JavaVersion.VERSION_17
 
     updateLicenses {

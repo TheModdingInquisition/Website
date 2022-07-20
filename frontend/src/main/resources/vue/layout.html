@@ -4,6 +4,17 @@
     <script src="/webjars/vue/2.6.10/dist/vue.min.js"></script>
     <script src="/webjars/http-vue-loader/1.4.2/src/httpVueLoader.js"></script>
     <script src="dist/components/global-components.js"></script>
+
+    <script src="https://kit.fontawesome.com/c5edf1b358.js" crossorigin="anonymous"></script>
+    <link href="/dist/semantic.min.css" rel="stylesheet" type="text/css">
+
+    <script>
+        function updateHeader(path) {
+            console.log(document)
+            document.getElementById('header-' + path).classList.add('active')
+        }
+    </script>
+
     @componentRegistration
     <style>
         * { font-family: system-ui, sans-serif; }
@@ -18,7 +29,7 @@
     </style>
 </head>
 <body>
-<main id="main-vue" style="padding:30px">
+<main id="main-vue">
     @routeComponent
 </main>
 <script>

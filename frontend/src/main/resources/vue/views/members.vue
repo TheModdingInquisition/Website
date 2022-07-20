@@ -1,5 +1,8 @@
 <template id = "members">
 <div>
+  <app-header></app-header>
+  <br>
+
   <div class="members ui content container">
     <h2 class="ui center aligned icon header">
       <i class="fa-solid fa-users"></i>
@@ -19,8 +22,6 @@
 </div>
 </template>
 <head>
-  <script src="https://kit.fontawesome.com/c5edf1b358.js" crossorigin="anonymous"></script>
-  <link href="/dist/semantic.min.css" rel="stylesheet" type="text/css">
   <script src="/dist/jquery-3.6.0.min.js"></script>
   <title>Inquisition's members</title>
   <meta name="color-scheme" content="light dark">
@@ -50,6 +51,8 @@
     }
     return string
   }
+
+  window.onload = () => updateHeader('members')
 </script>
 <style>
 .centre {

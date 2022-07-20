@@ -1,6 +1,8 @@
 <template id="index">
-  <div class="index">
-    <h1>A team of modders trying our best at helping others improve their mods.</h1>
+  <div class="ui container">
+    <app-header></app-header>
+    <br>
+    <h1>A team of modders trying their best at helping others improve their mods.</h1>
     <app-footer />
   </div>
 </template>
@@ -14,6 +16,7 @@
 Vue.component("index", {
   template: "#index"
 });
+window.onload = () => updateHeader('home')
 </script>
 <style>
 
