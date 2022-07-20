@@ -27,18 +27,73 @@ package org.moddinginquisition.web.backend
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.javalin.Javalin
+import org.flywaydb.core.Flyway
+import org.jdbi.v3.core.Jdbi
+import org.kohsuke.github.GitHubBuilder
+import org.mariadb.jdbc.MariaDbDataSource
+import org.moddinginquisition.web.backend.auth.AuthResolver
+import org.moddinginquisition.web.backend.db.Database
+import org.moddinginquisition.web.backend.db.PojoDAOImpl
+import org.moddinginquisition.web.backend.db.types.BrokenMod
 
 import java.nio.file.Path
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
 @Slf4j
 @CompileStatic
 class WebsiteBackend {
+
+    private static final ThreadGroup GROUP = new ThreadGroup('InquisitorWebsite')
+    private static final ScheduledExecutorService REFRESHER = Executors.newScheduledThreadPool(2, {
+        final thread = new Thread(GROUP, it, 'Refresher')
+        thread.daemon = true
+        return thread
+    })
+
+    public static Database database
 
     static void main(String[] args) throws Exception {
         final conf = Configuration.read(Path.of('config.json'))
         final app = Javalin.create().start(conf.port)
         app.get('/') {
             result('WIP')
+        }
+
+        final url = "jdbc:mariadb://${conf.database.url}/${conf.database.name}"
+        final dataSource = new MariaDbDataSource()
+        dataSource.setUrl url
+        dataSource.setUser conf.database.user
+        if (conf.database.password)
+            dataSource.setPassword conf.database.password
+
+        final var flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .locations("classpath:db")
+                .load()
+        flyway.migrate()
+
+        database = new Database(Jdbi.create(dataSource))
+
+        REFRESHER.schedule new AuthResolver(new GitHubBuilder()
+            .withOAuthToken(conf.gitHub.apiToken)
+            .build(), conf.gitHub), 1, TimeUnit.HOURS
+
+        final dao = new PojoDAOImpl<BrokenMod>(BrokenMod.class, database.jdbi, 'broken_mods')
+        dao.insert(new BrokenMod().with(true, {
+            mod_id = 'yes'
+            affected_versions = 'hi'
+            reason = 'sup'
+            fixed_version = 'askals'
+            fixed_download_url = 'https://github.com'
+            return it
+        }))
+
+        println dao.getAll()
+
+        app.get('/broken_mods') {
+            if (!AuthResolver.isJanitor(delegate)) return
         }
     }
 

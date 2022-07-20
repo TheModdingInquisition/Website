@@ -8,6 +8,14 @@ dependencies {
     implementation libs.gson
     implementation libs.javalin
     implementation libs.logback
+    implementation libs.github.api
+    implementation libs.guava
+
+    implementation libs.flyway
+    implementation libs.mariadb
+    implementation libs.jdbi.core
+    implementation libs.flyway.mysql
+    implementation libs.jdbi.sqlobject
 }
 
 final myProj = project

@@ -26,6 +26,7 @@ package org.moddinginquisition.web.backend
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.annotations.SerializedName
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
@@ -44,12 +45,34 @@ class Configuration {
         .create()
 
     int port = 8080
+    Database database
+    @SerializedName('github')
+    GitHub gitHub
+
+    @ToString
+    @CompileStatic
+    static class Database {
+        String url
+        String name = 'inquisition_web'
+        String user
+        String password
+    }
+
+    @ToString
+    @CompileStatic
+    static class GitHub {
+        String organization = 'TheModdingInquisition'
+        String janitorsTeam = 'ModdedJanitors'
+        String apiToken
+    }
 
     static Configuration read(Path path) throws IOException {
         if (Files.notExists path) {
             try (final writer = path.newWriter()) {
                 GSON.toJson(new Configuration(), writer)
             }
+            log.error('New configuration file was generated at {}', path)
+            System.exit(0)
         }
         try (final is = path.newReader()) {
             GSON.fromJson(is, Configuration)

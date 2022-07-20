@@ -8,10 +8,25 @@ gson = "2.9.0"
 logback = "1.2.11"
 vue = "2.6.10"
 vue-loader = "1.4.2"
+github-api = "1.306"
+guava = "31.1-jre"
+
+flyway = "8.5.13"
+jdbi = "3.30.0"
+mariadb = "3.0.6"
 
 [libraries]
 javalin = { module = "io.javalin:javalin", version.ref = "javalin" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+github-api = { module = "org.kohsuke:github-api", version.ref = "github-api" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+
 vue = { module = "org.webjars.npm:vue", version.ref = "vue" }
 vue-loader = { module = "org.webjars.npm:http-vue-loader", version.ref = "vue-loader" }
+
+flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }
+jdbi-core = { module = "org.jdbi:jdbi3-core", version.ref = "jdbi" }
+jdbi-sqlobject = { module = "org.jdbi:jdbi3-sqlobject", version.ref = "jdbi" }
+mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }

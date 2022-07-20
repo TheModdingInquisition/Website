@@ -1,0 +1,22 @@
+<configuration>
+    <!--Log levels include ERROR, WARN, INFO, DEBUG, TRACE -->
+
+    <appender name="CONSOLE"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%highlight(%d{yyyy-MM-dd HH:mm:ss} | [%thread] %logger{5} - %msg%n)</pattern>
+        </encoder>
+    </appender>
+    <!--Log levels include ERROR, WARN, INFO, DEBUG, TRACE -->
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Disabled loggers -->
+    <logger name="org.mariadb.jdbc.client.impl.StandardClient" level="ERROR" additivity="false"/>
+    <logger name="org.mariadb.jdbc.message.server.OkPacket" level="ERROR" additivity="false"/>
+    <logger name="org.flywaydb.core.internal.scanner.classpath.ClassPathScanner" level="ERROR" additivity="false"/>
+    <logger name="org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner" level="ERROR" additivity="false"/>
+    <logger name="org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory" level="ERROR" additivity="false"/>
+</configuration>
