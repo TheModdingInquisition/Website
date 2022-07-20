@@ -1,0 +1,1 @@
+Vue.component('app-footer', httpVueLoader('/dist/components/Footer.vue'))

@@ -2,10 +2,23 @@
 <head>
     <meta charset="utf8">
     <script src="/webjars/vue/2.6.10/dist/vue.min.js"></script>
+    <script src="/webjars/http-vue-loader/1.4.2/src/httpVueLoader.js"></script>
+    <script src="dist/components/global-components.js"></script>
     @componentRegistration
+    <style>
+        * { font-family: system-ui, sans-serif; }
+        .no-link {
+            text-decoration:none;
+            color:inherit;
+        }
+        .no-link:hover {
+            text-decoration:none;
+            color:darkred;
+        }
+    </style>
 </head>
 <body>
-<main id="main-vue" v-cloak>
+<main id="main-vue" style="padding:30px">
     @routeComponent
 </main>
 <script>

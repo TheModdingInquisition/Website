@@ -1,26 +1,61 @@
-<template id="members">
-  <div class="members">
-    <h1>The inquisition's members: {{mems}}</h1>
+<template id = "members">
+<div>
+  <div class="members ui content container">
+    <h2 class="ui center aligned icon header">
+      <i class="fa-solid fa-users"></i>
+      <p>The Inquisition's members:</p>
+    </h2>
+    <div class="members-contain ui link cards" style="justify-content: center;">
+      <div class="submember ui card" style="justify-content: center;" v-for="member in members" :key="member.name">
+        <a :href =member.url>
+        <img :src="member.avatar" width="200" height="200" class="centre"/>
+        <h2 style="text-align: center; padding: 5px; font-weight: bolder; font-family: 'Comic Sans MS', 'Comic Sans', cursive">{{member.name}}</h2>
+        </a>
+      </div>
+    </div>
   </div>
+
+  <app-footer />
+</div>
 </template>
 <head>
+  <script src="https://kit.fontawesome.com/c5edf1b358.js" crossorigin="anonymous"></script>
+  <link href="/dist/semantic.min.css" rel="stylesheet" type="text/css">
+  <script src="/dist/jquery-3.6.0.min.js"></script>
   <title>Inquisition's members</title>
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="/favicon.png" type="image/x-icon">
-  <meta name="description" content="The great people behind the inquisition!">
+  <meta name="description" content="The great people behind the Inquisition!">
+  <meta content="technology, programming, community, Minecraft, modding" name="keywords">
 </head>
 <script>
-const path = "/client_api/get_org_members"
-new LoadableData(path).refresh(true, e => {})
-const members = JSON.parse(localStorage.getItem("LoadableData:" + path))
-    .map(e => e.login)
-const asString = members.join(", ")
-Vue.component("members", {
-  template: "#members",
-  data: () => ({
-    mems: asString
-  })
-});
+  const path = "/client_api/get_org_members"
+  new LoadableData(path).refresh(true, e => {})
+  const members = JSON.parse(localStorage.getItem("LoadableData:" + path))
+  const actualMembers = members.map(e => ({
+    name: trim(e.login, 20),
+    url: e.html_url,
+    avatar: e.avatar_url
+  }));
+  Vue.component("members", {
+    template: "#members",
+    data: () => ({
+      members: actualMembers
+    }),
+  });
+
+  function trim(string, len) {
+    if (string.length > len) {
+      return string.substring(0, len - 3) + "..."
+    }
+    return string
+  }
 </script>
 <style>
+.centre {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+}
 </style>

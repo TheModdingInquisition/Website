@@ -7,9 +7,11 @@ groovy = "4.0.3"
 gson = "2.9.0"
 logback = "1.2.11"
 vue = "2.6.10"
+vue-loader = "1.4.2"
 
 [libraries]
 javalin = { module = "io.javalin:javalin", version.ref = "javalin" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 vue = { module = "org.webjars.npm:vue", version.ref = "vue" }
+vue-loader = { module = "org.webjars.npm:http-vue-loader", version.ref = "vue-loader" }

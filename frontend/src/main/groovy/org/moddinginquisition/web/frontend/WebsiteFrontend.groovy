@@ -52,6 +52,7 @@ class WebsiteFrontend {
 
         app.error(404, 'html', vue('not-found'))
 
+        // TODO should probably be part of the public API
         final clientApiEndpoint = '/client_api/'
         app.get("$clientApiEndpoint/get_org_members") {
             try {

@@ -10,11 +10,22 @@ dependencies {
     implementation libs.logback
 
     implementation libs.vue
+    implementation libs.vue.loader
 }
 
 processResources {
     from(rootProject.file('favicon.png')) {
         into 'public'
+    }
+
+    exclude 'dist'
+    from(file('src/main/resources/dist')) {
+        into 'public/dist'
+    }
+
+    exclude 'vue/components'
+    from(file('src/main/resources/vue/components')) {
+        into 'public/dist/components'
     }
 }
 
