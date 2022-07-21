@@ -28,11 +28,13 @@ import groovy.transform.CompileStatic
 import io.javalin.http.Context
 import io.javalin.http.Handler
 
+import static groovy.lang.Closure.DELEGATE_FIRST
+
 @CompileStatic
 class DSLs {
     static Handler handler(@HandlerClos Closure clos) {
         return (Context ctx) -> {
-            clos.delegate = new WrappedContext(ctx)
+            clos.delegate = ctx
             clos.resolveStrategy = DELEGATE_FIRST
             clos.call(ctx)
         }
