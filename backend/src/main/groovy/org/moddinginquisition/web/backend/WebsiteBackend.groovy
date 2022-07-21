@@ -34,6 +34,7 @@ import org.mariadb.jdbc.MariaDbDataSource
 import org.moddinginquisition.web.backend.auth.AuthResolver
 import org.moddinginquisition.web.backend.db.Database
 import org.moddinginquisition.web.backend.endpoints.BrokenModsEndpoint
+import org.moddinginquisition.web.backend.util.Role
 
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -55,7 +56,15 @@ class WebsiteBackend {
 
     static void main(String[] args) throws Exception {
         final conf = Configuration.read(Path.of('config.json'))
-        final app = Javalin.create().start(conf.port)
+        final app = Javalin.create() {
+            it.accessManager((handler, ctx, routeRoles) -> {
+                if (routeRoles.contains(Role.JANITOR) && !AuthResolver.isJanitor(ctx)) {
+                    return
+                } else {
+                    handler.handle(ctx)
+                }
+            })
+        }.start(conf.port)
         app.get('/') {
             result('WIP')
         }

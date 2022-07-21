@@ -25,15 +25,14 @@
 package org.moddinginquisition.web.dsl
 
 import groovy.transform.CompileStatic
+import io.javalin.http.Context
 import io.javalin.http.Handler
-
-import static groovy.lang.Closure.*
 
 @CompileStatic
 class DSLs {
     static Handler handler(@HandlerClos Closure clos) {
-        return (ctx) -> {
-            clos.delegate = ctx
+        return (Context ctx) -> {
+            clos.delegate = new WrappedContext(ctx)
             clos.resolveStrategy = DELEGATE_FIRST
             clos.call(ctx)
         }

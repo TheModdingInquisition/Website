@@ -4,11 +4,15 @@ import com.google.gson.JsonSyntaxException
 import groovy.transform.CompileStatic
 import io.javalin.Javalin
 import io.javalin.http.HttpCode
+import io.javalin.http.util.NaiveRateLimit
 import org.jdbi.v3.core.result.ResultIterable
-import org.moddinginquisition.web.backend.auth.AuthResolver
 import org.moddinginquisition.web.backend.db.Database
 import org.moddinginquisition.web.backend.db.types.BrokenMod
 import org.moddinginquisition.web.backend.util.ErrorResponder
+import org.moddinginquisition.web.backend.util.Role
+import org.moddinginquisition.web.backend.util.McRateLimit
+
+import java.util.concurrent.TimeUnit
 
 @CompileStatic
 class BrokenModsEndpoint {
@@ -17,7 +21,8 @@ class BrokenModsEndpoint {
         final brokenModsDao = db.get(BrokenMod)
 
         app.get('/broken_mods') {
-            if (!AuthResolver.isJanitor(delegate)) return
+            NaiveRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
+            McRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
             result(brokenModsDao.select()
                     .and(BrokenMod.&getMinecraft_version, queryParam('minecraft_version'))
                     .and(BrokenMod.&getMod_id, queryParam('mod_id'))
@@ -25,8 +30,7 @@ class BrokenModsEndpoint {
                     .toResponseJson())
         }
 
-        app.delete('/broken_mods') {
-            if (!AuthResolver.isJanitor(delegate)) return
+        app.delete('/broken_mods', Role.JANITOR) {
             final id = queryParam('id')?.isLong() ? queryParam('id') as Long : -1
             final found = brokenModsDao.select()
                     .and(BrokenMod.&getId, id)
@@ -52,8 +56,7 @@ class BrokenModsEndpoint {
             }
         }
 
-        app.post('/broken_mods') {
-            if (!AuthResolver.isJanitor(delegate)) return
+        app.post('/broken_mods', Role.JANITOR) {
             try {
                 final mod = BrokenMod.fromJson(body())
                 for (property in mod.getMetaClass().getProperties()) {

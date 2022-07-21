@@ -27,6 +27,7 @@ package org.moddinginquisition.web.extensions
 import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import io.javalin.Javalin
+import io.javalin.core.security.RouteRole
 import org.moddinginquisition.web.dsl.HandlerClos
 
 import java.nio.file.Files
@@ -47,6 +48,16 @@ class InstanceExtensions {
     }
     static void delete(Javalin self, String path, @HandlerClos Closure clos) {
         self.delete(path, handler(clos))
+    }
+
+    static void post(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
+        self.post(path, handler(clos), role)
+    }
+    static void get(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
+        self.get(path, handler(clos), role)
+    }
+    static void delete(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
+        self.delete(path, handler(clos), role)
     }
 
     static String toResponseJson(Object self) {

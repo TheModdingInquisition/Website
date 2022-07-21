@@ -53,12 +53,12 @@ class AuthResolver implements Runnable {
                 return isJanitor
             } catch (AuthException ignored) {
                 context.status(HttpCode.UNAUTHORIZED)
-                context.result(ErrorResponder.UNAUTHORIZED.withMessage("Invalid token provided"))
+                        .result(ErrorResponder.UNAUTHORIZED.withMessage("Invalid token provided"))
                 return false
             }
         }
         context.status(HttpCode.UNAUTHORIZED)
-        context.result(ErrorResponder.UNAUTHORIZED.toString())
+            .result(ErrorResponder.UNAUTHORIZED.toString())
         return false
     }
 

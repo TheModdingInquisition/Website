@@ -21,21 +21,21 @@ enum ErrorResponder {
     }
 
     String withMessage(String message) {
-return """
-    {
-        "err": "$code",
-        "message": "$message"
-    }
-"""
+        return """
+{
+    "err": "$code",
+    "message": "$message"
+}
+        """
     }
 
     @Override
     String toString() {
-return """
-    {
-        "err": "$code",
-        "message": "$message"
-    }
-"""
+        return """
+{
+    "err": "$code",
+    "message": "$message"
+}
+        """
     }
 }
