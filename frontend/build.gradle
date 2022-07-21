@@ -11,6 +11,8 @@ dependencies {
 
     implementation libs.vue
     implementation libs.vue.loader
+
+    implementation libs.github.api
 }
 
 processResources {

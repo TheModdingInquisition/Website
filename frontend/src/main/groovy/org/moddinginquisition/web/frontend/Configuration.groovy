@@ -45,6 +45,11 @@ class Configuration {
 
     int port = 8080
     String organization = 'TheModdingInquisition'
+    GitHub github
+
+    static class GitHub {
+        String client_id, client_secret
+    }
 
     static Configuration read(Path path) throws IOException {
         if (Files.notExists path) {
