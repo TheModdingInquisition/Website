@@ -12,7 +12,7 @@ github-api = "1.306"
 guava = "31.1-jre"
 
 flyway = "8.5.13"
-jdbi = "3.30.0"
+jdbi = "3.31.0"
 mariadb = "3.0.6"
 
 [libraries]

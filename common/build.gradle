@@ -1,5 +1,6 @@
 archivesBaseName = 'web-common'
 sourceSets {
+    transform {}
     dsl {}
     extension {}
 }
@@ -7,14 +8,13 @@ configurations {
     implementation.extendsFrom(groovyDeps)
     extensionImplementation.extendsFrom(implementation)
     dslImplementation.extendsFrom(implementation)
+    transformImplementation.extendsFrom(implementation)
 }
 dependencies {
     implementation libs.javalin
+    extensionImplementation libs.gson
 
     extensionCompileOnly sourceSets.dsl.output
-
-//    api sourceSets.dsl.output
-//    api sourceSets.extension.output
 }
 
 jar {

@@ -19,4 +19,6 @@
     <logger name="org.flywaydb.core.internal.scanner.classpath.ClassPathScanner" level="ERROR" additivity="false"/>
     <logger name="org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner" level="ERROR" additivity="false"/>
     <logger name="org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory" level="ERROR" additivity="false"/>
+    <logger name="org.eclipse.jetty.http.HttpParser" level="ERROR" additivity="false"/>
+    <logger name="org.eclipse.jetty" level="ERROR" additivity="false"/>
 </configuration>

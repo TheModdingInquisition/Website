@@ -23,5 +23,6 @@ project(':common').afterEvaluate {
     myProj.dependencies {
         implementation project(':common').sourceSets.dsl.output
         implementation project(':common').sourceSets.extension.output
+        compileOnly project(':common').sourceSets.transform.output
     }
 }

@@ -33,8 +33,7 @@ import org.kohsuke.github.GitHubBuilder
 import org.mariadb.jdbc.MariaDbDataSource
 import org.moddinginquisition.web.backend.auth.AuthResolver
 import org.moddinginquisition.web.backend.db.Database
-import org.moddinginquisition.web.backend.db.PojoDAOImpl
-import org.moddinginquisition.web.backend.db.types.BrokenMod
+import org.moddinginquisition.web.backend.endpoints.BrokenModsEndpoint
 
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -80,21 +79,7 @@ class WebsiteBackend {
             .withOAuthToken(conf.gitHub.apiToken)
             .build(), conf.gitHub), 1, TimeUnit.HOURS
 
-        final dao = new PojoDAOImpl<BrokenMod>(BrokenMod.class, database.jdbi, 'broken_mods')
-        dao.insert(new BrokenMod().with(true, {
-            mod_id = 'yes'
-            affected_versions = 'hi'
-            reason = 'sup'
-            fixed_version = 'askals'
-            fixed_download_url = 'https://github.com'
-            return it
-        }))
-
-        println dao.getAll()
-
-        app.get('/broken_mods') {
-            if (!AuthResolver.isJanitor(delegate)) return
-        }
+        BrokenModsEndpoint.setup app, database
     }
 
 }

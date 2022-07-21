@@ -8,6 +8,7 @@ import io.javalin.http.HttpCode
 import org.kohsuke.github.GitHub
 import org.kohsuke.github.GitHubBuilder
 import org.moddinginquisition.web.backend.Configuration
+import org.moddinginquisition.web.backend.util.ErrorResponder
 
 import java.util.concurrent.TimeUnit
 
@@ -40,21 +41,24 @@ class AuthResolver implements Runnable {
     }
 
     static boolean isJanitor(Context context) throws IOException {
+        if (Boolean.getBoolean('org.moddinginquisition.web.inDev')) return true
         final header = context.header('Authorization')
         if (header) {
             try {
                 final isJanitor = isUserJanitor(getLogin(header))
                 if (!isJanitor) {
                     context.status(HttpCode.FORBIDDEN)
-                    context.result("{'err': 'This endpoint requires you to be a Janitor'}")
+                    context.result(ErrorResponder.FORBIDDEN.toString())
                 }
                 return isJanitor
             } catch (AuthException ignored) {
                 context.status(HttpCode.UNAUTHORIZED)
-                context.result("{'err': 'Invalid token provided'}")
+                context.result(ErrorResponder.UNAUTHORIZED.withMessage("Invalid token provided"))
                 return false
             }
         }
+        context.status(HttpCode.UNAUTHORIZED)
+        context.result(ErrorResponder.UNAUTHORIZED.toString())
         return false
     }
 

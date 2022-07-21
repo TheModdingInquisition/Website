@@ -24,6 +24,7 @@
 
 package org.moddinginquisition.web.extensions
 
+import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import io.javalin.Javalin
 import org.moddinginquisition.web.dsl.HandlerClos
@@ -36,14 +37,29 @@ import static org.moddinginquisition.web.dsl.DSLs.*
 @CompileStatic
 @SuppressWarnings('unused')
 class InstanceExtensions {
+    private static final Gson GSON = new Gson()
+
     static void post(Javalin self, String path, @HandlerClos Closure clos) {
         self.post(path, handler(clos))
     }
     static void get(Javalin self, String path, @HandlerClos Closure clos) {
         self.get(path, handler(clos))
     }
+    static void delete(Javalin self, String path, @HandlerClos Closure clos) {
+        self.delete(path, handler(clos))
+    }
+
+    static String toResponseJson(Object self) {
+        return GSON.toJson(self)
+    }
+    static <T> T fromJson(Class<T> self, String json) {
+        return GSON.fromJson(json, self)
+    }
 
     static boolean asBoolean(Path path) {
         Files.exists(path)
+    }
+    static boolean asBoolean(Optional self) {
+        return self.isPresent()
     }
 }

@@ -8,8 +8,8 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
 @CompileStatic
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface ForTable {
-    String value()
+@interface IgnoreInTransaction {
+
 }
