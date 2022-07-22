@@ -79,7 +79,7 @@ class WebsiteFrontend {
             if (ck) {
                 redirect(ck, HttpCode.TEMPORARY_REDIRECT.status)
             } else {
-                redirect('/dist/no_user.png', HttpCode.TEMPORARY_REDIRECT.status)
+                redirect('/dist/icons/no_user.png', HttpCode.TEMPORARY_REDIRECT.status)
             }
         }
         app.get("$clientApiEndpoint/self_user") {
