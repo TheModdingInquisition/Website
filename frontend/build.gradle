@@ -1,3 +1,7 @@
+plugins {
+    id 'application'
+}
+
 configurations {
     implementation.extendsFrom(groovyDeps)
 }
@@ -29,6 +33,11 @@ processResources {
     from(file('src/main/resources/vue/components')) {
         into 'public/dist/components'
     }
+}
+
+run {
+    workingDir rootProject.file('run/frontend')
+    jvmArgs '-Dorg.moddinginquisition.web.inDev=true'
 }
 
 Runnable configuration = () -> {
