@@ -36,10 +36,9 @@
     const session = sessionStorage.getItem('members')
     if (session) finishLoading(JSON.parse(session))
     else {
-      window.location.reload()
       const members = await getHTML("https://api.github.com/orgs/TheModdingInquisition/members?page=1&per_page=100")
       sessionStorage.setItem('members', members)
-      finishLoading(JSON.parse(members))
+      window.location.reload()
     }
   }
 
