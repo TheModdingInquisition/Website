@@ -4,6 +4,7 @@ import java.nio.file.Files
 
 plugins {
     id 'application'
+    alias(libs.plugins.shadow)
 }
 
 configurations {
@@ -52,6 +53,10 @@ run {
     setMainClassName 'org.moddinginquisition.web.frontend.WebsiteFrontend'
 }
 
+jar {
+    classifier 'lite'
+}
+
 Runnable configuration = () -> {
     dependencies {
         implementation project(':common').sourceSets.dsl.output
@@ -59,13 +64,14 @@ Runnable configuration = () -> {
         implementation project(':common').sourceSets.extension.output
     }
 
-    jar {
+    shadowJar {
         from project(':common').sourceSets.dsl.output
         from project(':common').sourceSets.main.output
         from project(':common').sourceSets.extension.output
         manifest.attributes([
                 'Main-Class': application.getMainClassName()
         ])
+        classifier ''
     }
 }
 afterEvaluate {
