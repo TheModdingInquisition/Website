@@ -22,7 +22,6 @@
 </div>
 </template>
 <head>
-  <script src="/dist/jquery-3.6.0.min.js"></script>
   <title>Inquisition's members</title>
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="/favicon.png" type="image/x-icon">
