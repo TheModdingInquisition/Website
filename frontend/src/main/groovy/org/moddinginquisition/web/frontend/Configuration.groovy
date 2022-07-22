@@ -46,6 +46,7 @@ class Configuration {
     int port = 8080
     String organization = 'TheModdingInquisition'
     GitHub github
+    String apiUrl
 
     static class GitHub {
         String client_id, client_secret

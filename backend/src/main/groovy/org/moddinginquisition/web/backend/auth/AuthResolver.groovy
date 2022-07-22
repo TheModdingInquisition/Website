@@ -8,7 +8,7 @@ import io.javalin.http.HttpCode
 import org.kohsuke.github.GitHub
 import org.kohsuke.github.GitHubBuilder
 import org.moddinginquisition.web.backend.Configuration
-import org.moddinginquisition.web.backend.util.ErrorResponder
+import org.moddinginquisition.web.common.util.ErrorResponder
 
 import java.util.concurrent.TimeUnit
 
@@ -40,8 +40,10 @@ class AuthResolver implements Runnable {
         JANITORS.contains(login)
     }
 
+    public static final boolean DEBUG_MODE = Boolean.getBoolean('org.moddinginquisition.web.inDev')
+
     static boolean isJanitor(Context context) throws IOException {
-        if (Boolean.getBoolean('org.moddinginquisition.web.inDev')) return true
+        if (DEBUG_MODE) return true
         final header = context.header('Authorization')
         if (header) {
             try {

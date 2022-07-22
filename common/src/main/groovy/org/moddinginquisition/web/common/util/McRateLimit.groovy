@@ -1,4 +1,4 @@
-package org.moddinginquisition.web.backend.util
+package org.moddinginquisition.web.common.util
 
 import groovy.transform.Canonical
 import groovy.transform.CompileStatic

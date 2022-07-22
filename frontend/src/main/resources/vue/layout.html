@@ -13,6 +13,23 @@
             console.log(document)
             document.getElementById('header-' + path).classList.add('active')
         }
+
+        const userRoles = JSON.parse(getCookie('userRoles'))
+        function hasRole(role) {
+            // noinspection EqualityComparisonWithCoercionJS
+            return userRoles.some(v => v == role)
+        }
+
+        function getCookie(cName) {
+            const name = cName + "=";
+            const cDecoded = decodeURIComponent(document.cookie); //to be careful
+            const cArr = cDecoded.split('; ');
+            let res;
+            cArr.forEach(val => {
+                if (val.indexOf(name) === 0) res = val.substring(name.length);
+            })
+            return res
+        }
     </script>
 
     @componentRegistration

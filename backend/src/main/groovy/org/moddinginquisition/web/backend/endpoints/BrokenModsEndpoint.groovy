@@ -6,11 +6,12 @@ import io.javalin.Javalin
 import io.javalin.http.HttpCode
 import io.javalin.http.util.NaiveRateLimit
 import org.jdbi.v3.core.result.ResultIterable
+import org.moddinginquisition.web.backend.auth.AuthResolver
 import org.moddinginquisition.web.backend.db.Database
 import org.moddinginquisition.web.backend.db.types.BrokenMod
-import org.moddinginquisition.web.backend.util.ErrorResponder
-import org.moddinginquisition.web.backend.util.Role
-import org.moddinginquisition.web.backend.util.McRateLimit
+import org.moddinginquisition.web.common.util.ErrorResponder
+import org.moddinginquisition.web.common.util.Role
+import org.moddinginquisition.web.common.util.McRateLimit
 
 import java.util.concurrent.TimeUnit
 
@@ -21,8 +22,11 @@ class BrokenModsEndpoint {
         final brokenModsDao = db.get(BrokenMod)
 
         app.get('/broken_mods') {
-            NaiveRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
-            McRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
+            if (!AuthResolver.isJanitor(delegate)) {
+                NaiveRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
+                McRateLimit.requestPerTimeUnit(delegate, 5, TimeUnit.MINUTES)
+            }
+
             result(brokenModsDao.select()
                     .and(BrokenMod.&getMinecraft_version, queryParam('minecraft_version'))
                     .and(BrokenMod.&getMod_id, queryParam('mod_id'))

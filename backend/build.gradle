@@ -24,5 +24,6 @@ project(':common').afterEvaluate {
         implementation project(':common').sourceSets.dsl.output
         implementation project(':common').sourceSets.extension.output
         compileOnly project(':common').sourceSets.transform.output
+        implementation project(':common').sourceSets.main.output
     }
 }

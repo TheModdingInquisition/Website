@@ -27,14 +27,17 @@ package org.moddinginquisition.web.backend
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.javalin.Javalin
+import io.javalin.http.HttpCode
 import org.flywaydb.core.Flyway
 import org.jdbi.v3.core.Jdbi
 import org.kohsuke.github.GitHubBuilder
 import org.mariadb.jdbc.MariaDbDataSource
+import org.moddinginquisition.web.backend.auth.AuthException
 import org.moddinginquisition.web.backend.auth.AuthResolver
 import org.moddinginquisition.web.backend.db.Database
 import org.moddinginquisition.web.backend.endpoints.BrokenModsEndpoint
-import org.moddinginquisition.web.backend.util.Role
+import org.moddinginquisition.web.common.util.ErrorResponder
+import org.moddinginquisition.web.common.util.Role
 
 import java.nio.file.Path
 import java.util.concurrent.Executors
@@ -87,6 +90,27 @@ class WebsiteBackend {
         REFRESHER.schedule new AuthResolver(new GitHubBuilder()
             .withOAuthToken(conf.gitHub.apiToken)
             .build(), conf.gitHub), 1, TimeUnit.HOURS
+
+        app.get('/user_roles') {
+            final header = header('Authorization')
+            if (!header) {
+                status(HttpCode.UNAUTHORIZED)
+                        .result('[]')
+                return
+            }
+            try {
+                final login = AuthResolver.getLogin(header)
+                final roles = new ArrayList()
+                if (AuthResolver.isUserJanitor(login) || AuthResolver.DEBUG_MODE) {
+                    roles.add('janitor')
+                }
+                status(HttpCode.OK)
+                    .result(roles.toResponseJson())
+            } catch (AuthException e) {
+                status(HttpCode.UNAUTHORIZED)
+                    .result('[]')
+            }
+        }
 
         BrokenModsEndpoint.setup app, database
     }

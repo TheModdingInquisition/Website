@@ -15,6 +15,7 @@ dependencies {
     extensionImplementation libs.gson
 
     extensionCompileOnly sourceSets.dsl.output
+    extensionCompileOnly sourceSets.main.output
 }
 
 jar {

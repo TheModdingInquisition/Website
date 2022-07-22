@@ -28,6 +28,8 @@ import com.google.gson.Gson
 import groovy.transform.CompileStatic
 import io.javalin.Javalin
 import io.javalin.core.security.RouteRole
+import io.javalin.http.Context
+import org.moddinginquisition.web.common.util.ErrorResponder
 import org.moddinginquisition.web.dsl.HandlerClos
 
 import java.nio.file.Files
@@ -58,6 +60,10 @@ class InstanceExtensions {
     }
     static void delete(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
         self.delete(path, handler(clos), role)
+    }
+
+    static void result(Context self, ErrorResponder error) {
+        self.result(error.toString())
     }
 
     static String toResponseJson(Object self) {

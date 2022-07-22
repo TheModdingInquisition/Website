@@ -29,11 +29,14 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.javalin.Javalin
 import io.javalin.http.Context
+import io.javalin.http.Handler
 import io.javalin.http.HttpCode
 import io.javalin.http.staticfiles.Location
 import io.javalin.plugin.rendering.vue.JavalinVue
 import io.javalin.plugin.rendering.vue.VueComponent
 import org.kohsuke.github.GitHubBuilder
+import org.moddinginquisition.web.common.util.ErrorResponder
+import org.moddinginquisition.web.common.util.Role
 
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -46,15 +49,25 @@ import java.util.function.Consumer
 class WebsiteFrontend {
     private static final HttpClient CLIENT = HttpClient.newHttpClient()
 
+    private static Configuration conf
+
     static void main(String[] args) throws Exception {
         JavalinVue.rootDirectory {
             it.classpathPath('/vue', WebsiteFrontend)
         }
 
-        final conf = Configuration.read(Path.of('config.json'))
+        conf = Configuration.read(Path.of('config.json'))
         final app = Javalin.create() {
             it.enableWebjars()
             it.addStaticFiles('/public', Location.CLASSPATH)
+
+            it.accessManager((handler, ctx, routeRoles) -> {
+                if (routeRoles.contains(Role.JANITOR) && 'janitor' !in getRoles(ctx)) {
+                    ctx.status(HttpCode.FORBIDDEN).result(ErrorResponder.FORBIDDEN)
+                } else {
+                    handler.handle(ctx)
+                }
+            })
         }.start(conf.port)
         app.get('/', vue('index'))
         app.get('/members', vue('members'))
@@ -126,8 +139,27 @@ class WebsiteFrontend {
         }
     }
 
-    static VueComponent vue(String name) {
-        new VueComponent(name)
+    private static List<String> getRoles(Context context) {
+        final String token = context.cookieStore('gh_token')
+        if (!conf.apiUrl || !token)
+            return List.of()
+        try {
+            final request = HttpRequest.newBuilder(URI.create("${conf.apiUrl}/user_roles"))
+                .GET()
+                .header('Authorization', token)
+                .build()
+            final var response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString())
+            return List.fromJson(response.body())
+        } catch (Exception ignored) {
+            return List.of()
+        }
+    }
+
+    static Handler vue(String name) {
+        (Context ctx) -> {
+            ctx.cookie('userRoles', getRoles(ctx).join(","))
+            new VueComponent(name).handle(ctx)
+        }
     }
 
 }

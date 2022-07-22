@@ -1,4 +1,4 @@
-package org.moddinginquisition.web.backend.util
+package org.moddinginquisition.web.common.util
 
 import groovy.transform.CompileStatic
 
@@ -10,7 +10,7 @@ enum ErrorResponder {
     INVALID_SYNTAX('invalid_syntax'),
 
     FORBIDDEN('forbidden', 'This endpoint requires you to be a Janitor'),
-    UNAUTHORIZED('unauthorized', 'No authorization token provided')
+    UNAUTHORIZED('unauthorized', 'No authorization requires authorization')
     ;
 
     private final String code, message
