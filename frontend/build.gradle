@@ -38,6 +38,7 @@ processResources {
 run {
     workingDir rootProject.file('run/frontend')
     jvmArgs '-Dorg.moddinginquisition.web.inDev=true'
+    setMainClassName 'org.moddinginquisition.web.frontend.WebsiteFrontend'
 }
 
 Runnable configuration = () -> {
