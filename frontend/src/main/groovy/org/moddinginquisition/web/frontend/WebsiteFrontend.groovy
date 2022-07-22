@@ -61,18 +61,9 @@ class WebsiteFrontend {
 
         app.error(404, 'html', vue('not-found'))
 
-        // TODO should probably be part of the public API
         final clientApiEndpoint = '/client_api/'
-        app.get("$clientApiEndpoint/get_org_members") {
-            try {
-                final is = URI.create("https://api.github.com/orgs/${conf.organization}/members?page=1&per_page=100").toURL().newInputStream()
-                result(is)
-            } catch (IOException e) {
-                result("{'err': 'Unable to load org members!'}")
-                log.error('Unable to load requested org members!', e)
-            }
-        }
 
+        // TODO this entire cookie store for the avatar seems rather cursed, maybe figure out another way
         final Consumer<Context> dataResolver = (final Context ctx) -> {
             if ((!ctx.cookieStore('gh_user') || !ctx.cookieStore('gh_user_avatar')) && ctx.cookieStore('gh_token')) {
                 final myself = new GitHubBuilder().withJwtToken(ctx.cookieStore('gh_token'))
@@ -131,7 +122,7 @@ class WebsiteFrontend {
         }
 
         app.get('/login') {
-            redirect("https://github.com/login/oauth/authorize?client_id=${conf.github.client_id}&scope=user&login=dummy")
+            redirect("https://github.com/login/oauth/authorize?client_id=${conf.github.client_id}&scope=user")
         }
     }
 

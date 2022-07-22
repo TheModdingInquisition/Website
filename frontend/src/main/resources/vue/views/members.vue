@@ -30,20 +30,48 @@
   <meta content="technology, programming, community, Minecraft, modding" name="keywords">
 </head>
 <script>
-  const path = "/client_api/get_org_members"
-  new LoadableData(path).refresh(true, e => {})
-  const members = JSON.parse(localStorage.getItem("LoadableData:" + path))
-  const actualMembers = members.map(e => ({
-    name: trim(e.login, 20),
-    url: e.html_url,
-    avatar: e.avatar_url
-  }));
-  Vue.component("members", {
-    template: "#members",
-    data: () => ({
-      members: actualMembers
-    }),
-  });
+  doLoad()
+
+  async function doLoad() {
+    const session = sessionStorage.getItem('members')
+    if (session) finishLoading(JSON.parse(session))
+    else {
+      window.location.reload()
+      const members = await getHTML("https://api.github.com/orgs/TheModdingInquisition/members?page=1&per_page=100")
+      sessionStorage.setItem('members', members)
+      finishLoading(JSON.parse(members))
+    }
+  }
+
+  function getHTML(url) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('get', url, true);
+      xhr.onload = function () {
+        var status = xhr.status;
+        if (status == 200) {
+          resolve(xhr.responseText);
+        } else {
+          reject(status);
+        }
+      };
+      xhr.send();
+    });
+  }
+
+  function finishLoading(members) {
+    const actualMembers = members.map(e => ({
+      name: trim(e.login, 20),
+      url: e.html_url,
+      avatar: e.avatar_url
+    }));
+    Vue.component("members", {
+      template: "#members",
+      data: () => ({
+        members: actualMembers
+      }),
+    });
+  }
 
   function trim(string, len) {
     if (string.length > len) {
