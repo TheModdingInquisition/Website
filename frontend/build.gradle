@@ -1,3 +1,7 @@
+import org.moddinginquisition.web.gradle.DepResolver
+
+import java.nio.file.Files
+
 plugins {
     id 'application'
 }
@@ -33,6 +37,13 @@ processResources {
     from(file('src/main/resources/vue/components')) {
         into 'public/dist/components'
     }
+
+    doLast {
+        final var depsOut = project.file("$buildDir/resources/main/dependencies.txt")
+        Files.writeString(depsOut.toPath(), DepResolver.resolveDeps(
+                configurations.implementation, configurations.groovyDeps
+        ))
+    }
 }
 
 run {
@@ -46,6 +57,15 @@ Runnable configuration = () -> {
         implementation project(':common').sourceSets.dsl.output
         implementation project(':common').sourceSets.main.output
         implementation project(':common').sourceSets.extension.output
+    }
+
+    jar {
+        from project(':common').sourceSets.dsl.output
+        from project(':common').sourceSets.main.output
+        from project(':common').sourceSets.extension.output
+        manifest.attributes([
+                'Main-Class': application.getMainClassName()
+        ])
     }
 }
 afterEvaluate {

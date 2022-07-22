@@ -5,4 +5,4 @@ pluginManagement {
 }
 
 rootProject.name = 'InquisitionWebsite'
-include 'common', 'frontend', 'backend'
+include 'common', 'frontend', 'backend', 'launcher'

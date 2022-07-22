@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+jar {
+    manifest.attributes([
+            'Main-Class': 'org.moddinginquisition.web.launcher.Launcher'
+    ])
+}
+
+tasks.create('testJar', Jar) {
+    from sourceSets.test.output
+    manifest.attributes([
+            'Main-Class': 'mything.Test'
+    ])
+    classifier 'test'
+}
