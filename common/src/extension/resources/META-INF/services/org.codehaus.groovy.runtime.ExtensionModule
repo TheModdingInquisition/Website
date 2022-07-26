@@ -1,3 +1,0 @@
-moduleName = moddinginquisition-web
-moduleVersion = 1.0
-extensionClasses = org.moddinginquisition.web.extensions.InstanceExtensions

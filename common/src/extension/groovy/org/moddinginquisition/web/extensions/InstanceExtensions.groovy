@@ -51,6 +51,9 @@ class InstanceExtensions {
     static void delete(Javalin self, String path, @HandlerClos Closure clos) {
         self.delete(path, handler(clos))
     }
+    static void patch(Javalin self, String path, @HandlerClos Closure clos) {
+        self.patch(path, handler(clos))
+    }
 
     static void post(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
         self.post(path, handler(clos), role)
@@ -60,6 +63,9 @@ class InstanceExtensions {
     }
     static void delete(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
         self.delete(path, handler(clos), role)
+    }
+    static void patch(Javalin self, String path, RouteRole role, @HandlerClos Closure clos) {
+        self.patch(path, handler(clos), role)
     }
 
     static void result(Context self, ErrorResponder error) {

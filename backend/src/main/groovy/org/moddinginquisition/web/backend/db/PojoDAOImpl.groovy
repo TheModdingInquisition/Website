@@ -1,3 +1,4 @@
+//file:noinspection DuplicatedCode
 package org.moddinginquisition.web.backend.db
 
 import groovy.transform.CompileStatic
@@ -97,6 +98,11 @@ class PojoDAOImpl<T> implements PojoDAO<T> {
         return new Delete()
     }
 
+    @Override
+    UpdateStatement<T> update() {
+        return new Update()
+    }
+
     @CompileStatic
     class Query implements SelectionQuery<T> {
         // language=Text
@@ -152,6 +158,49 @@ class PojoDAOImpl<T> implements PojoDAO<T> {
         @Override
         int execute() {
             jdbi.withHandle(ctx -> ctx.createUpdate("delete from ${PojoDAOImpl.this.table}${where ?: ''}").execute())
+        }
+    }
+
+    @CompileStatic
+    class Update implements UpdateStatement<T> {
+        Map<String, Object> newValues
+        String where = null
+
+        @Override
+        def <Z> UpdateStatement<T> where(Closure<Z> type, @Nullable Z value) {
+            if (type !instanceof MethodClosure)
+                throw new IllegalArgumentException('Only method closures can be used for where statements!')
+            if (value === null)
+                return this
+            final mthClos = (MethodClosure) type
+            final typeName = mthClos.getMethod().replaceFirst('get', '').toLowerCase(Locale.ROOT)
+            final statement = "$typeName = '$value'"
+            if (where) {
+                where += ' and ' + statement
+            } else {
+                where = ' where ' + statement
+            }
+            return this
+        }
+
+        @Override
+        def <Z> UpdateStatement<T> set(Closure<Z> type, @Nullable Z value) {
+            if (type !instanceof MethodClosure)
+                throw new IllegalArgumentException('Only method closures can be used set where statements!')
+            if (value === null)
+                return this
+            final mthClos = (MethodClosure) type
+            final typeName = mthClos.getMethod().replaceFirst('get', '').toLowerCase(Locale.ROOT)
+            newValues.put(typeName, value)
+            return this
+        }
+
+        @Override
+        int execute() {
+            final setStm = properties.entrySet()
+                .stream().map {"${it.key} = '${it.value}'"}
+                .toList().join ','
+            jdbi.withHandle(ctx -> ctx.createUpdate("update ${PojoDAOImpl.this.table} set ${setStm} ${where ?: ''}").execute())
         }
     }
 }

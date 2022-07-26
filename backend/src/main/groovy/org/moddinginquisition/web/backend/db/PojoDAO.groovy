@@ -13,4 +13,6 @@ interface PojoDAO<T> {
     def <Z> Z insertReturning(T value, Closure<Z> toReturn)
 
     DeleteStatement<T> delete()
+
+    UpdateStatement<T> update()
 }
