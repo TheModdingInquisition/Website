@@ -135,7 +135,7 @@ class WebsiteFrontend {
         }
 
         app.get('/login') {
-            redirect("https://github.com/login/oauth/authorize?client_id=${conf.github.client_id}&scope=user")
+            redirect("https://github.com/login/oauth/authorize?client_id=${conf.github.client_id}&scope=read:user")
         }
     }
 
